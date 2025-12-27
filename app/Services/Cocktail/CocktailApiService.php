@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Services\Cocktail;
+
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+class CocktailApiService
+{
+    private const BASE_URL = 'https://www.thecocktaildb.com/api/json/v1/1';
+
+    /**
+     * Obtener listado de cócteles normalizados
+     */
+    public function list(): array
+    {
+        try {
+            $response = Http::timeout(5)
+                ->acceptJson()
+                ->get(self::BASE_URL . '/search.php', [
+                    's' => '',
+                ])
+                ->throw();
+
+            $drinks = $response->json('drinks');
+
+            if (!is_array($drinks)) {
+                Log::warning('Cocktail API returned invalid drinks payload', [
+                    'payload' => $drinks,
+                ]);
+
+                return [];
+            }
+
+            return $this->normalize($drinks);
+
+        } catch (\Throwable $e) {
+            Log::error('Cocktail API error', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return [];
+        }
+    }
+
+
+    /**
+     * Normaliza la respuesta de la API
+     */
+    private function normalize(array $drinks): array
+    {
+        return collect($drinks)->map(function ($drink) {
+            return [
+                'external_id' => $drink['idDrink'],
+                'name'        => $drink['strDrink'],
+                'category'    => $drink['strCategory'],
+                'alcoholic'   => $drink['strAlcoholic'],
+                'thumbnail'   => $drink['strDrinkThumb'],
+            ];
+        })->toArray();
+    }
+}
