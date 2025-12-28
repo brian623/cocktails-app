@@ -18,8 +18,8 @@ class CocktailApiService
         try {
             $response = Http::timeout(5)
                 ->acceptJson()
-                ->get(self::BASE_URL . '/search.php', [
-                    's' => '',
+                ->get(self::BASE_URL . '/filter.php', [
+                    'c' => 'Cocktail',
                 ])
                 ->throw();
 
@@ -44,6 +44,32 @@ class CocktailApiService
         }
     }
 
+    public function findById(string $externalId): ?array
+    {
+        $response = Http::get(
+            'https://www.thecocktaildb.com/api/json/v1/1/lookup.php',
+            ['i' => $externalId]
+        );
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $drink = $response->json('drinks.0');
+
+        if (! $drink) {
+            return null;
+        }
+
+        return [
+            'external_id' => $drink['idDrink'],
+            'name'        => $drink['strDrink'],
+            'category'    => $drink['strCategory'],
+            'alcoholic'   => $drink['strAlcoholic'],
+            'thumbnail'   => $drink['strDrinkThumb'],
+        ];
+    }
+
 
     /**
      * Normaliza la respuesta de la API
@@ -54,8 +80,6 @@ class CocktailApiService
             return [
                 'external_id' => $drink['idDrink'],
                 'name'        => $drink['strDrink'],
-                'category'    => $drink['strCategory'],
-                'alcoholic'   => $drink['strAlcoholic'],
                 'thumbnail'   => $drink['strDrinkThumb'],
             ];
         })->toArray();
