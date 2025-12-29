@@ -12,7 +12,11 @@ class CocktailController extends Controller
     {
         $cocktails = $service->list();
 
-        return view('cocktails.index', compact('cocktails'));
+        $favorites = Cocktail::query()
+            ->pluck('external_id')
+            ->toArray();
+
+        return view('cocktails.index', compact('cocktails', 'favorites'));
     }
 
     public function store(Request $request, CocktailApiService $api)
@@ -36,7 +40,9 @@ class CocktailController extends Controller
 
         return redirect()
             ->route('cocktails.index')
-            ->with('success', 'Cóctel guardado correctamente');
+            ->with('toast', [
+                    'type' => 'success',
+                    'message' => 'Cóctel guardado en favoritos']);
     }
 
     public function saved()
@@ -54,7 +60,10 @@ class CocktailController extends Controller
 
         return redirect()
             ->route('cocktails.saved')
-            ->with('success', 'Cóctel eliminado correctamente');
+            ->with('toast', [
+            'type' => 'success',
+            'message' => 'Cóctel retirado de favoritos 🍸'
+        ]);
     }
 
     public function edit(Cocktail $cocktail)
@@ -74,6 +83,9 @@ class CocktailController extends Controller
 
         return redirect()
             ->route('cocktails.saved')
-            ->with('success', 'Cóctel actualizado correctamente');
+            ->with('toast', [
+            'type' => 'success',
+            'message' => 'Cóctel actualizado correctamente 🍸'
+        ]);
     }
 }

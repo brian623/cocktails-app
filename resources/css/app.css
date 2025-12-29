@@ -1,5 +1,25 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.cocktail-card {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.cocktail-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cocktail-card img {
+    transition: transform .3s ease;
+}
+
+.cocktail-card:hover img {
+    transform: scale(1.05);
+}
+

@@ -14,15 +14,32 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link
                         :href="route('cocktails.index')"
-                        :active="request()->routeIs('cocktails.*')"
+                        :active="request()->routeIs('cocktails.index')"
                     >
+                        <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 3h18l-7 9v7l-4 2v-9L3 3z" />
+                        </svg>
                         {{ __('Cocktails') }}
                     </x-nav-link>
                     <x-nav-link
                         :href="route('cocktails.saved')"
                         :active="request()->routeIs('cocktails.saved')"
                     >
+                        <svg class="w-5 h-5 text-current" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.11a.563.563 0 00.475.345l5.518.442a.563.563 0 01.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.563.563 0 01-.84.61l-4.73-2.885a.563.563 0 00-.586 0l-4.73 2.885a.563.563 0 01-.84-.61l1.285-5.385a.563.563 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                        </svg>
                         {{ __('Favorites') }}
+                        @if($savedCount > 0)
+                            <span class="inline-flex items-center justify-center
+                                        rounded-full bg-indigo-600 text-white
+                                        text-xs font-semibold px-2 py-0.5">
+                                {{ $savedCount }}
+                            </span>
+                        @endif
                     </x-nav-link>
                 </div>
             </div>
@@ -118,7 +135,7 @@
                     transition-all duration-150
                     hover:text-indigo-600"
             >
-                <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5"
+                <svg class="w-5 h-5 text-current" stroke="currentColor" stroke-width="1.5"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.11a.563.563 0 00.475.345l5.518.442a.563.563 0 01.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.563.563 0 01-.84.61l-4.73-2.885a.563.563 0 00-.586 0l-4.73 2.885a.563.563 0 01-.84-.61l1.285-5.385a.563.563 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />

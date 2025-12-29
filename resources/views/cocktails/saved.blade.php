@@ -1,41 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container py-4">
     <h1 class="mb-4">Cócteles guardados</h1>
 
     <div class="row">
         @forelse ($cocktails as $cocktail)
             <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img
-                        src="{{ $cocktail->thumbnail }}"
-                        class="card-img-top"
-                        alt="{{ $cocktail->name }}"
-                    >
+                <x-cocktail-card
+                    :image="$cocktail->thumbnail"
+                    :title="$cocktail->name"
+                >
+                    <h5 class="card-title">{{ $cocktail->name }}</h5>
 
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $cocktail->name }}</h5>
+                    <p class="card-text mb-0">
+                        <strong>Categoría:</strong> {{ $cocktail->category ?? 'N/A' }} <br>
+                        <strong>Tipo:</strong> {{ $cocktail->alcoholic ?? 'N/A' }}
+                    </p>
 
-                        <p class="card-text">
-                            <strong>Categoría:</strong> {{ $cocktail->category ?? 'N/A' }} <br>
-                            <strong>Tipo:</strong> {{ $cocktail->alcoholic ?? 'N/A' }}
-                        </p>
-                        <form
-                            method="POST"
+                    <x-slot name="actions">
+                        <form 
+                            method="POST" 
                             action="{{ route('cocktails.destroy', $cocktail) }}"
-                            class="mt-3"
-                        >
+                            class="js-delete-form"
+                            data-name="{{ $cocktail->name }}"
+                            >
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger btn-sm w-100">
-                                Eliminar
+                            <button class="btn btn-sm btn-danger" title="Eliminar">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </form>
+
                         <button
-                            type="button"
-                            class="btn btn-outline-primary btn-sm w-100 mb-2 btn-edit-cocktail"
+                            class="btn btn-sm btn-primary btn-edit-cocktail"
                             data-bs-toggle="modal"
                             data-bs-target="#editCocktailModal"
                             data-id="{{ $cocktail->id }}"
@@ -43,13 +42,41 @@
                             data-category="{{ $cocktail->category }}"
                             data-alcoholic="{{ $cocktail->alcoholic }}"
                         >
-                            Editar
+                            <i class="bi bi-pencil"></i>
                         </button>
-                    </div>
+                    </x-slot>
+                </x-cocktail-card>
+
+            </div>
+            @empty
+            <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+                <div class="text-center d-flex flex-column align-items-center">
+
+                    {{-- Icono vacío (SVG inline, sin CDN) --}}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="96"
+                        height="96"
+                        fill="currentColor"
+                        class="text-muted mb-3"
+                        viewBox="0 0 16 16"
+                    >
+                        <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
+                        <path d="M4.5 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+
+                    <h4 class="mb-2">No tienes cócteles guardados</h4>
+
+                    <p class="text-muted mb-4">
+                        Guarda tus cócteles favoritos para verlos aquí 🍸
+                    </p>
+
+                    <a href="{{ route('cocktails.index') }}" class="btn btn-primary">
+                        Ver lista de cócteles
+                    </a>
                 </div>
             </div>
-        @empty
-            <p>No hay cócteles guardados.</p>
+
         @endforelse
 
         <div class="modal fade" id="editCocktailModal" tabindex="-1" aria-hidden="true">

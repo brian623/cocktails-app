@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('editCocktailModal');
     const form = document.getElementById('editCocktailForm');
 
-    modal.addEventListener('show.bs.modal', event => {
+    modal?.addEventListener('show.bs.modal', event => {
         const button = event.relatedTarget;
 
         const id = button.getAttribute('data-id');

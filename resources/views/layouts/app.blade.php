@@ -32,5 +32,12 @@
                 @yield('content')
             </main>
         </div>
+        @if (session('toast'))
+            <div
+                id="app-toast"
+                data-type="{{ session('toast.type') }}"
+                data-message="{{ session('toast.message') }}"
+            ></div>
+        @endif
     </body>
 </html>
