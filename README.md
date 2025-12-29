@@ -1,59 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍸 Cocktail Management Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web desarrollada con **Laravel** para la gestión de cócteles, autenticación de usuarios y pruebas automatizadas con cobertura de código.  
+El proyecto sigue buenas prácticas de arquitectura, testing y documentación, orientado a estándares profesionales y mantenibilidad a largo plazo.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Tabla de Contenidos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. [Descripción General](#descripción-general)
+2. [Stack Tecnológico](#stack-tecnológico)
+3. [Instalación del Proyecto](#instalación-del-proyecto)
+4. [Configuración del Entorno](#configuración-del-entorno)
+5. [Ejecución de la Aplicación](#ejecución-de-la-aplicación)
+6. [Estructura del Proyecto](#estructura-del-proyecto)
+7. [Flujo de la Aplicación](#flujo-de-la-aplicación)
+8. [Decisiones Técnicas](#decisiones-técnicas)
+9. [Autenticación y Seguridad](#autenticación-y-seguridad)
+10. [Testing y Cobertura](#testing-y-cobertura)
+11. [Buenas Prácticas Aplicadas](#buenas-prácticas-aplicadas)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📖 Descripción General
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Esta aplicación permite:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Registro y autenticación de usuarios
+- Acceso protegido a la sección de cócteles
+- Gestión de datos mediante Eloquent ORM
+- Visualización global de información compartida (ej. contador de cócteles)
+- Ejecución de pruebas automatizadas con alta cobertura
 
-## Laravel Sponsors
+El objetivo principal es demostrar **capacidad técnica, estructura de proyecto, testing robusto y toma de decisiones fundamentadas**, más que solo funcionalidad.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🧰 Stack Tecnológico
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **PHP 8.2+**
+- **Laravel 10**
+- **Laravel Breeze** (autenticación)
+- **Blade** (renderizado de vistas)
+- **MySQL / SQLite** (según entorno)
+- **PHPUnit** (testing)
+- **Xdebug / PCOV** (code coverage)
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ⚙️ Instalación del Proyecto
 
-## Code of Conduct
+### 1️⃣ Clonar el repositorio
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone <repositorio>
+cd cocktail-app
+### 2️⃣ Instalar dependencias PHP
 
-## Security Vulnerabilities
+```bash
+composer install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3️⃣ Crear archivo de entorno
 
-## License
+```bash
+cp .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 4️⃣ Generar clave de aplicación
+
+```bash
+php artisan key:generate
+```
+
+## 🛠️ Configuración del Entorno
+
+Configura la base de datos en el archivo `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cocktails
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Para **testing** se recomienda **SQLite en memoria**:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=:memory:
+```
+
+## ▶️ Ejecución de la Aplicación
+
+### Migraciones
+
+```bash
+php artisan migrate
+```
+
+### Servidor de desarrollo
+
+```bash
+php artisan serve
+```
+
+La aplicación estará disponible en:
+
+```
+http://127.0.0.1:8000
+```
+
+## 🗂️ Estructura del Proyecto
+
+```text
+app/
+ ├── Http/
+ │   ├── Controllers/
+ │   └── Middleware/
+ ├── Models/
+ │   └── Cocktail.php
+ ├── Providers/
+ │   ├── AppServiceProvider.php
+ │   └── RouteServiceProvider.php
+
+routes/
+ ├── web.php
+ └── auth.php
+
+resources/
+ ├── views/
+ │   ├── cocktails/
+ │   └── auth/
+
+tests/
+ ├── Feature/
+ │   ├── Auth/
+ │   │   ├── AuthenticationTest.php
+ │   │   └── RegistrationTest.php
+ │   └── CocktailTest.php
+ └── Unit/
+```
+
+## 🔄 Flujo de la Aplicación
+
+- Registro, autenticación y acceso a cócteles protegidos por middleware `auth`.
+- Redirecciones centralizadas mediante `RouteServiceProvider::HOME`.
+- Datos globales compartidos con View Composer.
+
+## 🧠 Decisiones Técnicas
+
+- Laravel Breeze para autenticación ligera y testeable.
+- Uso de Providers para centralizar configuración.
+- RefreshDatabase para aislamiento total en tests.
+
+## 🧪 Testing y Cobertura
+
+```bash
+php artisan test
+php artisan test --coverage
+```
+
+Requiere Xdebug o PCOV.
+
+## 👨‍💻 Autor
+
+Brian Rincon  
+Desarrollador Web / Ingeniero Mecatrónico
