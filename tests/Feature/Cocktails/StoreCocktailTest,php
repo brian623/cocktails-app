@@ -1,0 +1,103 @@
+<?php
+
+namespace Tests\Feature\Cocktails;
+
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Cocktail;
+use App\Services\Cocktail\CocktailApiService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
+use PHPUnit\Framework\Attributes\Test;
+
+class CocktailControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    #[Test]
+    public function it_saves_a_cocktail()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $mock = Mockery::mock(CocktailApiService::class);
+        $mock->shouldReceive('findById')
+            ->once()
+            ->with('123')
+            ->andReturn([
+                'external_id' => '123',
+                'name' => 'Mojito',
+                'category' => 'Cocktail',
+                'alcoholic' => 'Alcoholic',
+                'thumbnail' => 'img.jpg',
+            ]);
+
+        $this->app->instance(CocktailApiService::class, $mock);
+
+        $response = $this->post(route('cocktails.store'), [
+            'external_id' => '123',
+        ]);
+
+        $response->assertRedirect(route('cocktails.index'));
+
+        $this->assertDatabaseHas('cocktails', [
+            'external_id' => '123',
+            'name' => 'Mojito',
+        ]);
+    }
+
+    #[Test]
+    public function store_fails_when_api_returns_null()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $mock = Mockery::mock(CocktailApiService::class);
+        $mock->shouldReceive('findById')
+            ->once()
+            ->andReturn(null);
+
+        $this->app->instance(CocktailApiService::class, $mock);
+
+        $response = $this->post(route('cocktails.store'), [
+            'external_id' => '999',
+        ]);
+
+        $response->assertSessionHasErrors();
+    }
+
+    #[Test]
+    public function it_updates_a_cocktail()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $cocktail = Cocktail::factory()->create([
+            'name' => 'Old name',
+        ]);
+
+        $response = $this->put(route('cocktails.update', $cocktail), [
+            'name' => 'New name',
+        ]);
+
+        $response->assertRedirect(route('cocktails.saved'));
+
+        $this->assertDatabaseHas('cocktails', [
+            'id' => $cocktail->id,
+            'name' => 'New name',
+        ]);
+    }
+
+    #[Test]
+    public function it_deletes_a_cocktail()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $cocktail = Cocktail::factory()->create();
+
+        $response = $this->delete(route('cocktails.destroy', $cocktail));
+
+        $response->assertRedirect(route('cocktails.saved'));
+
+        $this->assertDatabaseMissing('cocktails', [
+            'id' => $cocktail->id,
+        ]);
+    }
+}

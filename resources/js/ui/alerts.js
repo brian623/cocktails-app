@@ -1,24 +1,34 @@
 import Swal from 'sweetalert2';
 
-export const toastSuccess = (message) => {
+export function toastSuccess(message) {
     Swal.fire({
         toast: true,
-        position: 'top-end',
         icon: 'success',
         title: message,
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-    });
-};
-
-export const toastError = (message) => {
-    Swal.fire({
-        toast: true,
         position: 'top-end',
-        icon: 'error',
-        title: message,
         showConfirmButton: false,
         timer: 3000,
+        timerProgressBar: true,
     });
-};
+}
+
+export function toastError(message) {
+    Swal.fire({
+        toast: true,
+        icon: 'error',
+        title: message,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+    });
+}
+
+export function initToastsFromSession() {
+    const el = document.getElementById('app-toast');
+    if (!el) return;
+
+    const { type, message } = el.dataset;
+
+    if (type === 'success') toastSuccess(message);
+    if (type === 'error') toastError(message);
+}

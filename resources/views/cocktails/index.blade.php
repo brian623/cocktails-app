@@ -22,7 +22,7 @@
 
                     <x-slot name="actions">
                         @if (!$isFavorite)
-                            <form method="POST" action="{{ route('cocktails.store') }}">
+                            <form method="POST" class="js-favorite-form" action="{{ route('cocktails.store') }}">
                                 @csrf
                                 <input type="hidden" name="external_id" value="{{ $cocktail['external_id'] }}">
 

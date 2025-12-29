@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public const HOME = '/cocktails';   
     /**
      * Register any application services.
      */

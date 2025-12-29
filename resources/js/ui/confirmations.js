@@ -12,6 +12,6 @@ export const confirmDelete = async (name = 'este elemento') => {
         cancelButtonText: 'Cancelar',
         focusCancel: true,
     });
-
+    
     return result.isConfirmed;
 };
